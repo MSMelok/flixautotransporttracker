@@ -88,6 +88,9 @@ export default function OrdersTable({ orders, onEditOrder, onDeleteOrder }: Orde
                     Customer
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Creator
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Dates
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -120,6 +123,12 @@ export default function OrdersTable({ orders, onEditOrder, onDeleteOrder }: Orde
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
                       <div className="text-sm text-gray-500">{order.phoneNumber}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {order.userEmail || `User-${order.userId.slice(0, 8)}`}
+                      </div>
+                      <div className="text-sm text-gray-500">ID: {order.userId.slice(0, 8)}...</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="space-y-1">
@@ -224,6 +233,14 @@ export default function OrdersTable({ orders, onEditOrder, onDeleteOrder }: Orde
                   <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Customer</div>
                   <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
                   <div className="text-sm text-gray-500">{order.phoneNumber}</div>
+                </div>
+
+                <div>
+                  <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Created By</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {order.userEmail || `User-${order.userId.slice(0, 8)}`}
+                  </div>
+                  <div className="text-sm text-gray-500">ID: {order.userId.slice(0, 8)}...</div>
                 </div>
 
                 <div>
