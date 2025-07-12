@@ -120,14 +120,28 @@ export default function Dashboard() {
     // Orders will be updated via the real-time listener
   };
 
+  // Filter orders based on date range
+  const getFilteredOrders = () => {
+    if (!startDate || !endDate) {
+      return orders;
+    }
+    
+    return orders.filter(order => {
+      const orderDate = order.dispatchDay;
+      if (!orderDate) return false;
+      return orderDate >= startDate && orderDate <= endDate;
+    });
+  };
+
   const calculateDashboardStats = (): DashboardStats => {
-    const postedCount = orders.filter(o => o.status === "Posted").length;
-    const onHoldCount = orders.filter(o => o.status === "On Hold").length;
-    const inProgressCount = orders.filter(o => o.status === "In Progress").length;
-    const dispatchedCount = orders.filter(o => o.status === "Dispatched").length;
-    const completedCount = orders.filter(o => o.status === "Completed").length;
-    const canceledCount = orders.filter(o => o.status === "Canceled").length;
-    const totalCount = orders.length;
+    const filteredOrders = getFilteredOrders();
+    const postedCount = filteredOrders.filter(o => o.status === "Posted").length;
+    const onHoldCount = filteredOrders.filter(o => o.status === "On Hold").length;
+    const inProgressCount = filteredOrders.filter(o => o.status === "In Progress").length;
+    const dispatchedCount = filteredOrders.filter(o => o.status === "Dispatched").length;
+    const completedCount = filteredOrders.filter(o => o.status === "Completed").length;
+    const canceledCount = filteredOrders.filter(o => o.status === "Canceled").length;
+    const totalCount = filteredOrders.length;
     const cancellationRate = totalCount > 0 ? (canceledCount / totalCount) * 100 : 0;
 
     return {
@@ -143,22 +157,9 @@ export default function Dashboard() {
   };
 
   const calculateTargetProgress = (): TargetProgress => {
-    const filteredOrders = orders.filter(order => {
-      // Filter by status first
-      if (order.status !== "Completed" && order.status !== "Dispatched") {
-        return false;
-      }
-      
-      // If no date filter is applied, include all orders
-      if (!startDate || !endDate) {
-        return true;
-      }
-      
-      // Use dispatch day for filtering when date filters are applied
-      const orderDate = order.dispatchDay;
-      if (!orderDate) return false;
-      
-      return orderDate >= startDate && orderDate <= endDate;
+    const filteredOrders = getFilteredOrders().filter(order => {
+      // Filter by status - only completed and dispatched orders count towards target
+      return order.status === "Completed" || order.status === "Dispatched";
     });
 
     const brokerFeeSum = filteredOrders.reduce((sum, order) => sum + (order.brokerFee || 0), 0);
@@ -310,7 +311,7 @@ export default function Dashboard() {
 
         {/* Orders Table */}
         <OrdersTable
-          orders={orders}
+          orders={getFilteredOrders()}
           onEditOrder={handleEditOrder}
           onDeleteOrder={handleOrderSuccess}
         />
