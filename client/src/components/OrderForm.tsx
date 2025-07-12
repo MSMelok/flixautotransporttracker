@@ -86,11 +86,14 @@ export default function OrderForm({ isOpen, onClose, order, onSuccess }: OrderFo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl" aria-describedby="order-form-description">
         <DialogHeader>
           <DialogTitle>
             {order ? "Edit Order" : "Add New Order"}
           </DialogTitle>
+          <div id="order-form-description" className="sr-only">
+            {order ? "Edit the details of an existing order" : "Create a new auto transport order"}
+          </div>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">

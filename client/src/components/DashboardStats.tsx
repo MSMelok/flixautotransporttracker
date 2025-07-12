@@ -29,9 +29,21 @@ export default function DashboardStatsComponent({ stats, targetProgress, salaryC
               </span>
             </div>
             <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">On Hold</span>
+              <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
+                {stats.onHoldCount}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">In Progress</span>
               <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full">
                 {stats.inProgressCount}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">Dispatched</span>
+              <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full">
+                {stats.dispatchedCount}
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -45,6 +57,12 @@ export default function DashboardStatsComponent({ stats, targetProgress, salaryC
               <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
                 {stats.canceledCount}
               </span>
+            </div>
+            <div className="border-t pt-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-900">Total Orders</span>
+                <span className="text-sm font-bold text-gray-900">{stats.totalCount}</span>
+              </div>
             </div>
             <div className="border-t pt-3">
               <div className="flex justify-between items-center">

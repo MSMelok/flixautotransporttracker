@@ -20,8 +20,14 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState<Order | undefined>();
-  const [startDate, setStartDate] = useState("2024-01-01");
-  const [endDate, setEndDate] = useState("2024-01-14");
+  const [uniqueUsers, setUniqueUsers] = useState<{id: string, email: string}[]>([]);
+  // Set default date range to current month
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  
+  const [startDate, setStartDate] = useState(firstDayOfMonth.toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(lastDayOfMonth.toISOString().split('T')[0]);
   const [selectedUserId, setSelectedUserId] = useState<string>("all-users");
 
   useEffect(() => {
@@ -46,10 +52,23 @@ export default function Dashboard() {
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ordersData: Order[] = [];
+      const userIds = new Set<string>();
+      
       snapshot.forEach((doc) => {
-        ordersData.push({ id: doc.id, ...doc.data() } as Order);
+        const orderData = { id: doc.id, ...doc.data() } as Order;
+        ordersData.push(orderData);
+        userIds.add(orderData.userId);
       });
+      
       setOrders(ordersData);
+      
+      // Extract unique users (in a real app, you'd fetch user emails from a users collection)
+      const users = Array.from(userIds).map(userId => ({
+        id: userId,
+        email: userId === user?.uid ? user?.email || 'Current User' : `User ${userId.slice(0, 8)}`
+      }));
+      setUniqueUsers(users);
+      
       setLoading(false);
     });
 
@@ -115,7 +134,10 @@ export default function Dashboard() {
 
   const calculateTargetProgress = (): TargetProgress => {
     const filteredOrders = orders.filter(order => {
-      const orderDate = order.dispatchDay || order.createdAt;
+      // Use dispatch day for filtering completed and dispatched orders
+      const orderDate = order.dispatchDay;
+      if (!orderDate) return false;
+      
       return (
         (order.status === "Completed" || order.status === "Dispatched") &&
         orderDate >= startDate &&
@@ -123,7 +145,7 @@ export default function Dashboard() {
       );
     });
 
-    const brokerFeeSum = filteredOrders.reduce((sum, order) => sum + order.brokerFee, 0);
+    const brokerFeeSum = filteredOrders.reduce((sum, order) => sum + (order.brokerFee || 0), 0);
     const target = 2300;
     const remaining = Math.max(0, target - brokerFeeSum);
     const percentageComplete = (brokerFeeSum / target) * 100;
@@ -245,7 +267,11 @@ export default function Dashboard() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all-users">All Users</SelectItem>
-                  {/* This would be populated with actual user data in a real app */}
+                  {uniqueUsers.map(user => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user.email}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             )}
