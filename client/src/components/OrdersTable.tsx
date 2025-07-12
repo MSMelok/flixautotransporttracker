@@ -1,0 +1,198 @@
+import { useState } from "react";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Order } from "@/types/order";
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Package, Edit, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface OrdersTableProps {
+  orders: Order[];
+  onEditOrder: (order: Order) => void;
+  onDeleteOrder: () => void;
+}
+
+export default function OrdersTable({ orders, onEditOrder, onDeleteOrder }: OrdersTableProps) {
+  const { user, isAdmin } = useAuth();
+  const { toast } = useToast();
+
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      await deleteDoc(doc(db, "orders", orderId));
+      toast({
+        title: "Success",
+        description: "Order deleted successfully!",
+      });
+      onDeleteOrder();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete order. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Posted":
+        return "bg-blue-100 text-blue-800";
+      case "On Hold":
+        return "bg-gray-100 text-gray-800";
+      case "In Progress":
+        return "bg-orange-100 text-orange-800";
+      case "Dispatched":
+        return "bg-purple-100 text-purple-800";
+      case "Completed":
+        return "bg-green-100 text-green-800";
+      case "Canceled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  if (orders.length === 0) {
+    return (
+      <Card className="shadow-lg border-gray-100">
+        <CardContent className="p-12 text-center">
+          <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
+          <p className="text-gray-600">Get started by creating your first order.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="shadow-lg border-gray-100 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Order Details
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Customer
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Dates
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Financials
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {orders.map((order) => (
+              <tr key={order.id} className="hover:bg-gray-50 transition-colors duration-150">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center">
+                        <Package className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <div className="text-sm font-medium text-gray-900">{order.orderId}</div>
+                      <div className="text-sm text-gray-500">Created: {formatDate(order.createdAt)}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
+                  <div className="text-sm text-gray-500">{order.phoneNumber}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div className="space-y-1">
+                    <div>
+                      <span className="font-medium">Pickup:</span> {formatDate(order.pickupStart)} - {formatDate(order.pickupEnd)}
+                    </div>
+                    <div>
+                      <span className="font-medium">Dispatch:</span> {formatDate(order.dispatchDay)}
+                    </div>
+                    <div>
+                      <span className="font-medium">Booked:</span> {formatDate(order.bookingDate)}
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div className="space-y-1">
+                    <div>
+                      <span className="font-medium">Broker:</span>{" "}
+                      <span className="text-blue-600 font-semibold">${order.brokerFee.toFixed(2)}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Total:</span>{" "}
+                      <span className="text-gray-900 font-semibold">${order.totalPrice.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Badge className={getStatusColor(order.status)}>
+                    {order.status}
+                  </Badge>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onEditOrder(order)}
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the order.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteOrder(order.id)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  );
+}
