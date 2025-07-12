@@ -27,7 +27,7 @@ export default function DateRangeFilter({ startDate, endDate, onDateRangeChange 
   return (
     <Card className="shadow-lg border-gray-100">
       <CardContent className="p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+        <div className="flex flex-col space-y-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-1">Dashboard Analytics</h2>
             <p className="text-sm text-gray-600">
@@ -38,31 +38,33 @@ export default function DateRangeFilter({ startDate, endDate, onDateRangeChange 
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="startDate" className="text-sm font-medium text-gray-700">Start Date:</Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={localStartDate}
-                onChange={(e) => setLocalStartDate(e.target.value)}
-                className="text-sm"
-              />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="startDate" className="text-sm font-medium text-gray-700 w-20">Start Date:</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={localStartDate}
+                  onChange={(e) => setLocalStartDate(e.target.value)}
+                  className="text-sm flex-1"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="endDate" className="text-sm font-medium text-gray-700 w-20">End Date:</Label>
+                <Input
+                  id="endDate"
+                  type="date"
+                  value={localEndDate}
+                  onChange={(e) => setLocalEndDate(e.target.value)}
+                  className="text-sm flex-1"
+                />
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="endDate" className="text-sm font-medium text-gray-700">End Date:</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={localEndDate}
-                onChange={(e) => setLocalEndDate(e.target.value)}
-                className="text-sm"
-              />
-            </div>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 sm:ml-auto">
               <Button
                 onClick={handleApplyFilter}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-sm"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-sm flex-1 sm:flex-none"
               >
                 Apply Filter
               </Button>
@@ -70,7 +72,7 @@ export default function DateRangeFilter({ startDate, endDate, onDateRangeChange 
                 <Button
                   onClick={handleClearFilters}
                   variant="outline"
-                  className="text-sm"
+                  className="text-sm flex-1 sm:flex-none"
                 >
                   Clear Filters
                 </Button>

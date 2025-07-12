@@ -119,7 +119,7 @@ export default function OrderForm({ isOpen, onClose, order, onSuccess }: OrderFo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl" aria-describedby="order-form-description">
+      <DialogContent className="w-full max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto" aria-describedby="order-form-description">
         <DialogHeader>
           <DialogTitle>
             {order ? "Edit Order" : "Add New Order"}
@@ -129,8 +129,8 @@ export default function OrderForm({ isOpen, onClose, order, onSuccess }: OrderFo
           </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <Label htmlFor="status">Order Status</Label>
               <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>

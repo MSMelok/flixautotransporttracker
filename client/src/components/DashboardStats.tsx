@@ -10,7 +10,7 @@ interface DashboardStatsProps {
 
 export default function DashboardStatsComponent({ stats, targetProgress, salaryCalculation }: DashboardStatsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       {/* Section A: Orders Overview */}
       <Card className="shadow-lg border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-200">
         <CardContent className="p-6">
