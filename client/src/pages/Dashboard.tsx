@@ -58,10 +58,24 @@ export default function Dashboard() {
       
       setOrders(ordersData);
       
-      // Extract unique users - show email for current user, user ID for others
+      // Extract unique users with proper email identification
+      const userEmailMap = new Map<string, string>();
+      
+      // Build a map of userId to userEmail from order data
+      ordersData.forEach(order => {
+        if (order.userEmail) {
+          userEmailMap.set(order.userId, order.userEmail);
+        }
+      });
+      
+      // If current user is in the list, use their email
+      if (user?.uid && userIds.has(user.uid)) {
+        userEmailMap.set(user.uid, user.email || 'Current User');
+      }
+      
       const users = Array.from(userIds).map(userId => ({
         id: userId,
-        email: userId === user?.uid ? (user?.email || 'Current User') : userId
+        email: userEmailMap.get(userId) || `User-${userId.slice(0, 8)}`
       }));
       setUniqueUsers(users);
       

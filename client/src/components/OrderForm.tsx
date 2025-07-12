@@ -91,6 +91,7 @@ export default function OrderForm({ isOpen, onClose, order, onSuccess }: OrderFo
           brokerFee: Number(formData.brokerFee),
           totalPrice: Number(formData.totalPrice),
           userId: user.uid,
+          userEmail: user.email,
           createdAt: new Date().toISOString().split('T')[0],
         });
         toast({

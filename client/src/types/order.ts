@@ -11,6 +11,7 @@ export interface Order {
   brokerFee: number;
   totalPrice: number;
   userId: string;
+  userEmail?: string; // Added to store user email for better identification
   createdAt: string;
 }
 
