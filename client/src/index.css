@@ -105,3 +105,10 @@
     @apply bg-red-100 text-red-800;
   }
 }
+
+@media (min-width: 1024px) {
+  .lg\:px-8 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
