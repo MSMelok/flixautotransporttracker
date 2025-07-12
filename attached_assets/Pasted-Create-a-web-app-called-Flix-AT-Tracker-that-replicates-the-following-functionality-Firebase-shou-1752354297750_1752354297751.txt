@@ -1,0 +1,87 @@
+Create a web app called "Flix AT Tracker" that replicates the following functionality, Firebase should be integrated for Auth and Firestore.
+
+📦 FEATURES TO BUILD:
+🔹 1. Firebase Integration
+Use the following Firebase config:
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCAPbba0CQ54YQwxKHaRjc3YduOYTtyhFM",
+  authDomain: "flixautotransporttracker.firebaseapp.com",
+  projectId: "flixautotransporttracker",
+  storageBucket: "flixautotransporttracker.appspot.com",
+  messagingSenderId: "466490737243",
+  appId: "1:466490737243:web:296943f60491349f86357e"
+};
+Use Firebase Authentication (Email/Password).
+
+Use Firestore to store orders under the orders collection -- the collection in Firebase Database is called orders.
+
+Add userId to each order (must match auth.currentUser.uid).
+
+🔹 2. User Roles Logic
+admin@admin.com can read/write all orders 
+
+All other users can only read and write their own orders
+
+admin@admin.com is the only one who can filter by user
+
+Firestore rules will enforce this — use auth.currentUser.email to conditionally show admin controls.
+
+🔹 3. Order Form
+The form should collect:
+
+Order Status (select: Posted, On Hold, In Progress, Dispatched, Completed, Canceled)
+
+Order ID
+
+Customer Name
+
+Phone Number
+
+Pickup Start (date)
+
+Pickup End (date)
+
+Dispatch Day (date)
+
+Booking Date (date)
+
+Broker Fee (number)
+
+Total Price (number)
+
+✅ Use YYYY-MM-DD format for all date values
+✅ Store and compare dates as plain strings, not JavaScript Date objects, to fix the timezone bug
+
+🔹 4. Dashboard Statistics
+Split into 3 sections:
+
+📊 SECTION A – Orders Info
+Count per status
+
+Cancellation % (Canceled ÷ Total Orders × 100)
+
+🎯 SECTION B – Target Progress
+Sum of brokerFee from Completed and Dispatched orders in selected 2-week range
+
+Remaining to target: $2300 - brokerFeeSum
+
+💰 SECTION C – Salary Calculation
+
+if (brokerFeeSum >= 2300)
+  salary = 250 + (0.10 × brokerFeeSum)
+else
+  salary = 0.20 × brokerFeeSum
+🔹 5. Date Range Filter
+Let user pick a startDate and endDate
+
+Only use Completed and Dispatched orders within this range in calculations
+
+
+Firebase Modular SDK (firebase/auth, firebase/firestore)
+
+Use onAuthStateChanged() to guard protected routes
+
+Add logout button
+Show user email and role in header
+Admin-only user management interface

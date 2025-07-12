@@ -1,0 +1,66 @@
+Brand Identity & Theme
+Primary Brand Colors: Deep blue (#1E40AF) and indigo (#4338CA) gradients for professional transport/logistics feel
+Secondary Colors: Success green (#059669), warning amber (#D97706), error red (#DC2626)
+Neutral Palette: Clean grays from #F8FAFC (lightest) to #1F2937 (darkest)
+Typography: Inter font family with clear hierarchy - headings (600-700 weight), body (400-500 weight)
+Visual Style Direction
+Modern SaaS Dashboard Aesthetic: Clean, professional, data-driven interface
+Card-Based Layout: Elevated white cards with subtle shadows (shadow-lg) and rounded corners (rounded-xl)
+Gradient Accents: Subtle blue-to-indigo gradients for headers, buttons, and key elements
+Apple-Level Polish: Meticulous attention to spacing, alignment, and micro-interactions
+Component Design Patterns
+📊 Dashboard Cards
+
+White background with border-gray-100 borders
+8px padding system (p-6, p-8 for larger cards)
+Hover states with subtle lift (-translate-y-1) and enhanced shadows
+Color-coded icons in rounded containers matching content theme
+Clear visual hierarchy with large numbers (text-3xl, font-bold) and descriptive subtitles
+🎯 Status Indicators
+
+Pill-shaped badges with colored backgrounds and borders
+Status-specific colors: Posted (blue), In Progress (orange), Completed (green), Canceled (red)
+Semi-transparent backgrounds (bg-opacity-10) with solid text colors
+📋 Data Tables
+
+Alternating row hover states (hover:bg-gray-50)
+Clear column headers with uppercase, tracked text
+Grouped information in table cells with primary/secondary text hierarchy
+Action buttons with icon-only design and hover states
+🔘 Interactive Elements
+
+Primary buttons: Blue gradient backgrounds with white text
+Secondary buttons: Gray borders with hover state changes
+Form inputs: Clean borders with blue focus rings (focus:ring-2 focus:ring-blue-500)
+Consistent 8px border radius for all interactive elements
+Layout & Spacing
+Container: max-w-7xl centered with responsive padding
+Grid System: CSS Grid for dashboard stats (1-4 columns responsive)
+Spacing Scale: 4px base unit (space-y-4, space-y-6, space-y-8)
+Responsive Breakpoints: Mobile-first with md: and lg: breakpoints
+Color Psychology & Usage
+Blue/Indigo: Trust, professionalism, primary actions
+Green: Success, completed orders, positive metrics
+Orange: Warning, in-progress items, attention needed
+Red: Errors, canceled orders, critical actions
+Gray: Neutral information, secondary text, borders
+Micro-Interactions
+Hover Effects: Subtle scale transforms, color transitions, shadow enhancements
+Loading States: Spinning indicators with brand colors
+Form Validation: Smooth color transitions for error/success states
+Button Feedback: Active states with slight scale reduction
+Data Visualization
+Progress Bars: Rounded, color-coded based on performance thresholds
+Metric Cards: Large numbers with contextual icons and trend indicators
+Status Distribution: Color-coded counts with percentage calculations
+Accessibility & UX
+High Contrast: WCAG AA compliant color combinations
+Clear Focus States: Visible focus rings for keyboard navigation
+Descriptive Labels: Clear, actionable button text and form labels
+Responsive Design: Seamless experience across all device sizes
+Professional Polish Details
+Consistent Icon Usage: Lucide React icons throughout with 16-24px sizes
+Subtle Animations: 200-300ms transitions for smooth interactions
+White Space: Generous padding and margins for breathing room
+Visual Hierarchy: Clear information architecture with proper heading levels
+This design system creates a professional, trustworthy interface that feels both modern and reliable - perfect for a business-critical order tracking application.
