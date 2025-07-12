@@ -21,13 +21,9 @@ export default function Dashboard() {
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState<Order | undefined>();
   const [uniqueUsers, setUniqueUsers] = useState<{id: string, email: string}[]>([]);
-  // Set default date range to current month
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  
-  const [startDate, setStartDate] = useState(firstDayOfMonth.toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(lastDayOfMonth.toISOString().split('T')[0]);
+  // No default date filters - show all data by default
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<string>("all-users");
 
   useEffect(() => {
@@ -62,10 +58,10 @@ export default function Dashboard() {
       
       setOrders(ordersData);
       
-      // Extract unique users (in a real app, you'd fetch user emails from a users collection)
+      // Extract unique users - show email for current user, user ID for others
       const users = Array.from(userIds).map(userId => ({
         id: userId,
-        email: userId === user?.uid ? user?.email || 'Current User' : `User ${userId.slice(0, 8)}`
+        email: userId === user?.uid ? (user?.email || 'Current User') : userId
       }));
       setUniqueUsers(users);
       
@@ -134,15 +130,21 @@ export default function Dashboard() {
 
   const calculateTargetProgress = (): TargetProgress => {
     const filteredOrders = orders.filter(order => {
-      // Use dispatch day for filtering completed and dispatched orders
+      // Filter by status first
+      if (order.status !== "Completed" && order.status !== "Dispatched") {
+        return false;
+      }
+      
+      // If no date filter is applied, include all orders
+      if (!startDate || !endDate) {
+        return true;
+      }
+      
+      // Use dispatch day for filtering when date filters are applied
       const orderDate = order.dispatchDay;
       if (!orderDate) return false;
       
-      return (
-        (order.status === "Completed" || order.status === "Dispatched") &&
-        orderDate >= startDate &&
-        orderDate <= endDate
-      );
+      return orderDate >= startDate && orderDate <= endDate;
     });
 
     const brokerFeeSum = filteredOrders.reduce((sum, order) => sum + (order.brokerFee || 0), 0);

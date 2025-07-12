@@ -18,13 +18,24 @@ export default function DateRangeFilter({ startDate, endDate, onDateRangeChange 
     onDateRangeChange(localStartDate, localEndDate);
   };
 
+  const handleClearFilters = () => {
+    setLocalStartDate("");
+    setLocalEndDate("");
+    onDateRangeChange("", "");
+  };
+
   return (
     <Card className="shadow-lg border-gray-100">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-1">Dashboard Analytics</h2>
-            <p className="text-sm text-gray-600">Filter data by date range for target progress and salary calculations</p>
+            <p className="text-sm text-gray-600">
+              {startDate && endDate ? 
+                `Showing data from ${startDate} to ${endDate}` : 
+                "Showing all data - apply date filter to narrow results"
+              }
+            </p>
           </div>
           
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -48,12 +59,23 @@ export default function DateRangeFilter({ startDate, endDate, onDateRangeChange 
                 className="text-sm"
               />
             </div>
-            <Button
-              onClick={handleApplyFilter}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-sm"
-            >
-              Apply Filter
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                onClick={handleApplyFilter}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-sm"
+              >
+                Apply Filter
+              </Button>
+              {(startDate || endDate) && (
+                <Button
+                  onClick={handleClearFilters}
+                  variant="outline"
+                  className="text-sm"
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

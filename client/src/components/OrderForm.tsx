@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,17 +23,49 @@ export default function OrderForm({ isOpen, onClose, order, onSuccess }: OrderFo
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<OrderFormData>({
-    orderId: order?.orderId || "",
-    status: order?.status || "",
-    customerName: order?.customerName || "",
-    phoneNumber: order?.phoneNumber || "",
-    pickupStart: order?.pickupStart || "",
-    pickupEnd: order?.pickupEnd || "",
-    dispatchDay: order?.dispatchDay || "",
-    bookingDate: order?.bookingDate || "",
-    brokerFee: order?.brokerFee || 0,
-    totalPrice: order?.totalPrice || 0,
+    orderId: "",
+    status: "",
+    customerName: "",
+    phoneNumber: "",
+    pickupStart: "",
+    pickupEnd: "",
+    dispatchDay: "",
+    bookingDate: "",
+    brokerFee: 0,
+    totalPrice: 0,
   });
+
+  // Update form data when order prop changes
+  useEffect(() => {
+    if (order) {
+      setFormData({
+        orderId: order.orderId || "",
+        status: order.status || "",
+        customerName: order.customerName || "",
+        phoneNumber: order.phoneNumber || "",
+        pickupStart: order.pickupStart || "",
+        pickupEnd: order.pickupEnd || "",
+        dispatchDay: order.dispatchDay || "",
+        bookingDate: order.bookingDate || "",
+        brokerFee: order.brokerFee || 0,
+        totalPrice: order.totalPrice || 0,
+      });
+    } else {
+      // Reset form for new order
+      setFormData({
+        orderId: "",
+        status: "",
+        customerName: "",
+        phoneNumber: "",
+        pickupStart: "",
+        pickupEnd: "",
+        dispatchDay: "",
+        bookingDate: "",
+        brokerFee: 0,
+        totalPrice: 0,
+      });
+    }
+  }, [order]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
