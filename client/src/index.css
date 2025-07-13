@@ -73,6 +73,7 @@
     @apply bg-gradient-to-r from-blue-600 to-indigo-600;
   }
   
+  
   .gradient-brand-hover {
     @apply hover:from-blue-700 hover:to-indigo-700;
   }
